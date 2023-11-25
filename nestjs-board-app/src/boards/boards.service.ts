@@ -5,6 +5,7 @@ import { CreateBoardDto } from './dto/create-board.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BoardRepository } from './board.repository';
 import { Board } from './board.entity';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class BoardsService {
@@ -38,8 +39,8 @@ export class BoardsService {
   //   return board;
   // }
 
-  createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
-    return this.boardRepository.createBoard(createBoardDto);
+  createBoard(createBoardDto: CreateBoardDto, user: User): Promise<Board> {
+    return this.boardRepository.createBoard(createBoardDto, user);
   }
 
   // getBoardById(id: string): Board {
@@ -65,7 +66,17 @@ export class BoardsService {
   //   return this.boardRepository.delete(id);
   // }
 
-  async deleteBoard(id: number): Promise<void> {
+  async deleteBoard(id: number, user: User): Promise<void> {
+    // const result = await this.boardRepository.delete({ id, userId: user.id });
+
+    const boardToDelete = await this.boardRepository.findOne({
+      where: { id, user: { id: user.id } },
+    });
+
+    if (!boardToDelete) {
+      throw new NotFoundException(`You are not allowed`);
+    }
+
     const result = await this.boardRepository.delete(id);
 
     if (result.affected === 0) {
@@ -86,5 +97,13 @@ export class BoardsService {
     await this.boardRepository.save(board);
 
     return board;
+  }
+
+  async getMyAllBoards(user: User): Promise<Board[]> {
+    const query = this.boardRepository.createQueryBuilder('board');
+    query.where('board.userId = :userId', { userId: user.id });
+
+    const boards = await query.getMany();
+    return boards;
   }
 }

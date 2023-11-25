@@ -23,13 +23,19 @@ let BoardsService = class BoardsService {
     async getAllBoards() {
         return this.boardRepository.find();
     }
-    createBoard(createBoardDto) {
-        return this.boardRepository.createBoard(createBoardDto);
+    createBoard(createBoardDto, user) {
+        return this.boardRepository.createBoard(createBoardDto, user);
     }
     getBoardById(id) {
         return this.boardRepository.getBoardById(id);
     }
-    async deleteBoard(id) {
+    async deleteBoard(id, user) {
+        const boardToDelete = await this.boardRepository.findOne({
+            where: { id, user: { id: user.id } },
+        });
+        if (!boardToDelete) {
+            throw new common_1.NotFoundException(`You are not allowed`);
+        }
         const result = await this.boardRepository.delete(id);
         if (result.affected === 0) {
             throw new common_1.NotFoundException(`Can't find Board with id ${id}`);
@@ -40,6 +46,12 @@ let BoardsService = class BoardsService {
         board.status = status;
         await this.boardRepository.save(board);
         return board;
+    }
+    async getMyAllBoards(user) {
+        const query = this.boardRepository.createQueryBuilder('board');
+        query.where('board.userId = :userId', { userId: user.id });
+        const boards = await query.getMany();
+        return boards;
     }
 };
 exports.BoardsService = BoardsService;

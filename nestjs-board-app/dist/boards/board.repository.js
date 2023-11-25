@@ -18,12 +18,13 @@ let BoardRepository = class BoardRepository extends typeorm_1.Repository {
     constructor(dataSource) {
         super(board_entity_1.Board, dataSource.createEntityManager());
     }
-    async createBoard(createBoardDto) {
+    async createBoard(createBoardDto, user) {
         const { title, description } = createBoardDto;
         const board = this.create({
             title,
             description,
             status: board_status_enum_1.BoardStatus.PUBLIC,
+            user,
         });
         await this.save(board);
         return board;
