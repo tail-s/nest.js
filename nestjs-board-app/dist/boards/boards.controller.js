@@ -18,6 +18,7 @@ const boards_service_1 = require("./boards.service");
 const board_status_enum_1 = require("./board-status.enum");
 const create_board_dto_1 = require("./dto/create-board.dto");
 const board_status_validation_pipe_1 = require("./pipes/board-status-validation.pipe");
+const passport_1 = require("@nestjs/passport");
 let BoardsController = class BoardsController {
     constructor(boardsService) {
         this.boardsService = boardsService;
@@ -77,6 +78,7 @@ __decorate([
 ], BoardsController.prototype, "updateBoardStatus", null);
 exports.BoardsController = BoardsController = __decorate([
     (0, common_1.Controller)('boards'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)()),
     __metadata("design:paramtypes", [boards_service_1.BoardsService])
 ], BoardsController);
 //# sourceMappingURL=boards.controller.js.map

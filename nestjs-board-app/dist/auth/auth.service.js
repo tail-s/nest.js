@@ -17,9 +17,11 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const user_repository_1 = require("./user.repository");
 const bcrypt = require("bcrypt");
+const jwt_1 = require("@nestjs/jwt");
 let AuthService = class AuthService {
-    constructor(userRepository) {
+    constructor(userRepository, jwtService) {
         this.userRepository = userRepository;
+        this.jwtService = jwtService;
     }
     async signUp(authCredentialsDto) {
         return this.userRepository.createUser(authCredentialsDto);
@@ -28,7 +30,9 @@ let AuthService = class AuthService {
         const { username, password } = authCredentialsDto;
         const user = await this.userRepository.findOne({ where: { username } });
         if (user && (await bcrypt.compare(password, user.password))) {
-            return 'login success';
+            const payload = { username };
+            const accessToken = await this.jwtService.sign(payload);
+            return { accessToken };
         }
         else {
             throw new common_1.UnauthorizedException('login failed');
@@ -39,6 +43,7 @@ exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(user_repository_1.UserRepository)),
-    __metadata("design:paramtypes", [user_repository_1.UserRepository])
+    __metadata("design:paramtypes", [user_repository_1.UserRepository,
+        jwt_1.JwtService])
 ], AuthService);
 //# sourceMappingURL=auth.service.js.map

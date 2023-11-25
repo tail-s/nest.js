@@ -1,8 +1,12 @@
 import { UserRepository } from './user.repository';
 import { AuthCredentialsDto } from './dto/auth-credential.dto';
+import { JwtService } from '@nestjs/jwt';
 export declare class AuthService {
     private userRepository;
-    constructor(userRepository: UserRepository);
+    private jwtService;
+    constructor(userRepository: UserRepository, jwtService: JwtService);
     signUp(authCredentialsDto: AuthCredentialsDto): Promise<void>;
-    signIn(authCredentialsDto: AuthCredentialsDto): Promise<string>;
+    signIn(authCredentialsDto: AuthCredentialsDto): Promise<{
+        accessToken: string;
+    }>;
 }
