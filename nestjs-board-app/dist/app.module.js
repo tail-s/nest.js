@@ -11,12 +11,13 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const boards_module_1 = require("./boards/boards.module");
 const typeorm_config_1 = require("./configs/typeorm.config");
+const auth_module_1 = require("./auth/auth.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forRoot(typeorm_config_1.typeORMConfig), boards_module_1.BoardsModule],
+        imports: [typeorm_1.TypeOrmModule.forRoot(typeorm_config_1.typeORMConfig), boards_module_1.BoardsModule, auth_module_1.AuthModule],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map
