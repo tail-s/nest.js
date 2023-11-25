@@ -24,8 +24,11 @@ const user_entity_1 = require("../auth/user.entity");
 let BoardsController = class BoardsController {
     constructor(boardsService) {
         this.boardsService = boardsService;
+        this.logger = new common_1.Logger('BoardsController');
     }
     createBoard(createBoardDto, user) {
+        this.logger.verbose(`User "${user.username}" creating a new board.
+    Payload: ${JSON.stringify(createBoardDto)}`);
         return this.boardsService.createBoard(createBoardDto, user);
     }
     getBoardById(id) {
@@ -38,6 +41,7 @@ let BoardsController = class BoardsController {
         return this.boardsService.updateBoardStatus(id, status);
     }
     getMyAllBoards(user) {
+        this.logger.verbose(`User "${user.username}" trying to get all boards`);
         return this.boardsService.getMyAllBoards(user);
     }
 };

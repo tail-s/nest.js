@@ -5,6 +5,7 @@ import { Board } from './board.entity';
 import { User } from 'src/auth/user.entity';
 export declare class BoardsController {
     private readonly boardsService;
+    private logger;
     constructor(boardsService: BoardsService);
     createBoard(createBoardDto: CreateBoardDto, user: User): Promise<Board>;
     getBoardById(id: number): Promise<Board>;
