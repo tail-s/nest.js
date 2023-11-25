@@ -1,12 +1,13 @@
 import { BoardsService } from './boards.service';
-import { Board, BoardStatus } from './board.model';
+import { BoardStatus } from './board-status.enum';
 import { CreateBoardDto } from './dto/create-board.dto';
+import { Board } from './board.entity';
 export declare class BoardsController {
     private readonly boardsService;
     constructor(boardsService: BoardsService);
-    getAllBoard(): Board[];
-    createBoard(createBoardDto: CreateBoardDto): Board;
-    getBoardById(id: string): Board;
-    deleteBoard(id: string): void;
-    updateBoardStatus(id: string, status: BoardStatus): Board;
+    getAllBoard(): Promise<Board[]>;
+    createBoard(createBoardDto: CreateBoardDto): Promise<Board>;
+    getBoardById(id: number): Promise<Board>;
+    deleteBoard(id: number): Promise<void>;
+    updateBoardStatus(id: number, status: BoardStatus): Promise<Board>;
 }
